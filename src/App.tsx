@@ -1,24 +1,87 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useRef } from "react";
+import "./App.css";
+
+// Stop TS complaining
+const win: any = window;
 
 function App() {
+  // Flag to indicate whether sport buff has started to init
+  const initialisedSportBuff = useRef<boolean>(false);
+
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (initialisedSportBuff.current) return;
+    const init = async () => {
+      const videoWrapper = videoContainerRef.current;
+      if (!videoWrapper) return;
+      const videoPlayer = videoWrapper.querySelector("video");
+      if (!videoPlayer) return;
+      let sportBuffContainer: Element;
+
+      const appendContainer = (containerToAppend: Element) => {
+        sportBuffContainer = containerToAppend;
+        videoWrapper.appendChild(containerToAppend);
+      };
+
+      const destroyContainer = () => {
+        if (!sportBuffContainer) return;
+        videoWrapper.removeChild(sportBuffContainer);
+      };
+
+      const clientName = "clientName";
+      const streamId = "X";
+
+      const widget = await win.SportBuff.init({
+        streamId,
+        playlistMode: true,
+        clientName,
+        player: "custom-functions",
+        appendContainer,
+        destroyContainer,
+        addFullScreenButton: true,
+        fullScreenElement: videoWrapper,
+      });
+
+      win.widget = widget;
+
+      const handleMouseOver = () => widget.controls.showUi();
+      const handleMouseOut = () => widget.controls.hideUi();
+
+      videoWrapper.addEventListener("mouseover", handleMouseOver);
+      videoWrapper.addEventListener("mouseout", handleMouseOut);
+
+      // Only required for VOD
+      const handleTimeUpdate = () => {
+        widget.controls.updateTimeVOD(videoPlayer.currentTime || 0);
+      };
+      videoPlayer.addEventListener("timeupdate", handleTimeUpdate);
+    };
+
+    if (win.SportBuff) {
+      console.log("window.SportBuff loaded");
+      init();
+    } else {
+      console.log("window.SportBuff not loaded");
+      win.onSportBuffReady = init;
+    }
+
+    initialisedSportBuff.current = true;
+
+    return () => {
+      if (win.widget) {
+        win.widget.destroy();
+      }
+    };
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div id="video-container" ref={videoContainerRef}>
+        <video
+          src="https://buffup-public.prod.buffup.net/video/FIFA_VOD_SHORT.mp4"
+          controls
+        />
+      </div>
     </div>
   );
 }

@@ -11,3 +11,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+#video-container {
+  max-width: 800px;
+  margin: 20px auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#video-container video {
+  width: 100%;
+}
+
+#video-container video::-webkit-media-controls-fullscreen-button {
+  display: none !important;
+}
