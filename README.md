@@ -1,3 +1,7 @@
+# Getting started
+
+You will want to update the script src and replace `clientName` with the one provided in `public/index.html` & update the `clientName` & `streamId` variables in `App.tsx`
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
