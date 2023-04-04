@@ -1,6 +1,6 @@
 # Getting started
 
-You will want to update the script src and replace `clientName` with the one provided in `public/index.html` & update the `clientName` & `streamId` variables in `App.tsx`
+The script src has to be updated. Find and replace `clientName` in `public/index.html` with the one provided by us and update the `clientName` & `streamId` variables in `App.tsx`
 
 # Getting Started with Create React App
 

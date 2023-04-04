@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import "./App.css";
+import React, { useEffect, useRef } from 'react';
+import './App.css';
 
-// Stop TS complaining
 const win: any = window;
 
 function App() {
@@ -15,7 +14,7 @@ function App() {
     const init = async () => {
       const videoWrapper = videoContainerRef.current;
       if (!videoWrapper) return;
-      const videoPlayer = videoWrapper.querySelector("video");
+      const videoPlayer = videoWrapper.querySelector('video');
       if (!videoPlayer) return;
       let sportBuffContainer: Element;
 
@@ -29,14 +28,14 @@ function App() {
         videoWrapper.removeChild(sportBuffContainer);
       };
 
-      const clientName = "clientName";
-      const streamId = "X";
+      const clientName = 'clientName';
+      const streamId = 'streamId';
 
       const widget = await win.SportBuff.init({
         streamId,
         playlistMode: true,
         clientName,
-        player: "custom-functions",
+        player: 'custom-functions',
         appendContainer,
         destroyContainer,
         addFullScreenButton: true,
@@ -48,21 +47,21 @@ function App() {
       const handleMouseOver = () => widget.controls.showUi();
       const handleMouseOut = () => widget.controls.hideUi();
 
-      videoWrapper.addEventListener("mouseover", handleMouseOver);
-      videoWrapper.addEventListener("mouseout", handleMouseOut);
+      videoWrapper.addEventListener('mouseover', handleMouseOver);
+      videoWrapper.addEventListener('mouseout', handleMouseOut);
 
       // Only required for VOD
       const handleTimeUpdate = () => {
         widget.controls.updateTimeVOD(videoPlayer.currentTime || 0);
       };
-      videoPlayer.addEventListener("timeupdate", handleTimeUpdate);
+      videoPlayer.addEventListener('timeupdate', handleTimeUpdate);
     };
 
     if (win.SportBuff) {
-      console.log("window.SportBuff loaded");
+      console.log('window.SportBuff loaded');
       init();
     } else {
-      console.log("window.SportBuff not loaded");
+      console.log('window.SportBuff not loaded');
       win.onSportBuffReady = init;
     }
 
